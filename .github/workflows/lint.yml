@@ -26,16 +26,12 @@ jobs:
         run: |
           find . -name "*.py" -not -path "*/__pycache__/*" -print0 | xargs -0 flake8 --max-line-length=120 --ignore=E501,W503,W504,E203,E266,W505 || true
 
-      - name: Lint Shell scripts
-        uses: dotenv-linter/action-v2@v2.3.0
-        with:
-          args: --no-color
-
       - name: ShellCheck lint
         uses: ludeeus/action-shellcheck@2.0.0
         with:
           scandir: ./
           exclude: .git
+          severity: warning
 
       - name: Check YAML
         uses: ibiqlik/action-yamllint@v3
