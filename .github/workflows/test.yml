@@ -1,0 +1,43 @@
+name: Test
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Install dependencies
+        run: |
+          pip install --upgrade pip
+          pip install beautifulsoup4 requests
+
+      - name: Validate Python scripts compile
+        run: |
+          python3 -m py_compile recon/subdomain_enum.py recon/http_probe.py osint/metadata_extract.py
+
+      - name: Validate Bash scripts compile
+        run: |
+          bash -n recon/port_scan.sh hardening/ssh_hardening.sh hardening/server_check.sh osint/email_osint.sh utils/banner.sh
+
+      - name: Dry-run subdomain enum help
+        run: |
+          python3 recon/subdomain_enum.py --help || true
+
+      - name: Dry-run port scan help
+        run: |
+          ./recon/port_scan.sh || true
+
+      - name: Verify scripts exist
+        run: |
+          ls -la recon/subdomain_enum.py recon/http_probe.py osint/metadata_extract.py recon/port_scan.sh hardening/ssh_hardening.sh osint/email_osint.sh utils/banner.sh

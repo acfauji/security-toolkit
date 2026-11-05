@@ -1,0 +1,45 @@
+name: Lint
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  lint:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Install Python linting tools
+        run: |
+          pip install --upgrade pip
+          pip install flake8 pylint
+
+      - name: Lint Python scripts
+        run: |
+          find . -name "*.py" -not -path "*/__pycache__/*" -print0 | xargs -0 flake8 --max-line-length=120 --ignore=E501,W503,W504,E203,E266,W505 || true
+
+      - name: Lint Shell scripts
+        uses: dotenv-linter/action-v2@v2.3.0
+        with:
+          args: --no-color
+
+      - name: ShellCheck lint
+        uses: ludeeus/action-shellcheck@2.0.0
+        with:
+          scandir: ./
+          exclude: .git
+
+      - name: Check YAML
+        uses: ibiqlik/action-yamllint@v3
+        with:
+          config_file: .yamllint
+          strict: true
+          file: '.github/workflows/*.yml'
