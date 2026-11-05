@@ -1,1 +1,2 @@
-# General utilities
+# Utilities
+Reusable helper scripts.

@@ -1,1 +1,2 @@
-# Hardening scripts
+# Hardening
+Server hardening scripts and security checklists.

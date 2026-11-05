@@ -1,1 +1,2 @@
-# OSINT tools
+# OSINT
+Open-source intelligence gathering utilities.
